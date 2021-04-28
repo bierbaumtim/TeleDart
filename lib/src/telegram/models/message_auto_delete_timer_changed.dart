@@ -21,13 +21,13 @@ part of '../model.dart';
 /// https://core.telegram.org/bots/api#messageautodeletetimerchanged
 @JsonSerializable()
 class MessageAutoDeleteTimerChanged {
-  int message_auto_delete_time;
+  int? message_auto_delete_time;
 
   MessageAutoDeleteTimerChanged({this.message_auto_delete_time});
 
   @JsonKey(ignore: true)
   Duration get message_auto_delete_time_ =>
-      TimeHelper.toDuration(message_auto_delete_time);
+      TimeHelper.toDuration(message_auto_delete_time!);
   set message_auto_delete_time_(Duration duration) =>
       message_auto_delete_time = TimeHelper.toSeconds(duration);
 

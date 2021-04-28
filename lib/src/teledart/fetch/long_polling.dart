@@ -30,7 +30,7 @@ class LongPolling extends AbstractUpdateFetcher {
   int offset;
   int limit;
   int timeout;
-  List<String> allowed_updates;
+  List<String>? allowed_updates;
 
   bool _isPolling = false;
   bool get isPolling => _isPolling;
@@ -85,10 +85,10 @@ class LongPolling extends AbstractUpdateFetcher {
               timeout: timeout,
               allowed_updates: allowed_updates)
           .then((updates) {
-        if (updates.isNotEmpty) {
+        if (updates!.isNotEmpty) {
           for (var update in updates) {
             emitUpdate(update);
-            offset = update.update_id + 1;
+            offset = update.update_id! + 1;
           }
         }
         _resetRetryDelay();

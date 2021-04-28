@@ -24,12 +24,12 @@ part of '../model.dart';
 /// [v.4.0]: https://telegram.org/blog/video-messages-and-telescope
 @JsonSerializable()
 class VideoNote {
-  String file_id;
-  String file_unique_id;
-  int length;
-  int duration;
-  PhotoSize thumb;
-  int file_size;
+  String? file_id;
+  String? file_unique_id;
+  int? length;
+  int? duration;
+  PhotoSize? thumb;
+  int? file_size;
 
   VideoNote({
     this.file_id,
@@ -41,7 +41,7 @@ class VideoNote {
   });
 
   @JsonKey(ignore: true)
-  Duration get duration_ => TimeHelper.toDuration(duration);
+  Duration get duration_ => TimeHelper.toDuration(duration!);
   set duration_(Duration duration) =>
       this.duration = TimeHelper.toSeconds(duration);
 

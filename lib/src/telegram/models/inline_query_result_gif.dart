@@ -25,22 +25,22 @@ part of '../model.dart';
 @JsonSerializable()
 class InlineQueryResultGif implements InlineQueryResult {
   @override
-  String id;
+  String? id;
   @override
-  String type;
-  String gif_url;
-  int gif_width;
-  int gif_height;
-  int gif_duration;
-  String thumb_url;
-  String thumb_mime_type;
-  String title;
-  String caption;
-  String parse_mode;
-  List<MessageEntity> caption_entities;
+  String? type;
+  String? gif_url;
+  int? gif_width;
+  int? gif_height;
+  int? gif_duration;
+  String? thumb_url;
+  String? thumb_mime_type;
+  String? title;
+  String? caption;
+  String? parse_mode;
+  List<MessageEntity>? caption_entities;
   @override
-  InlineKeyboardMarkup reply_markup;
-  InputMessageContent input_message_content;
+  InlineKeyboardMarkup? reply_markup;
+  InputMessageContent? input_message_content;
 
   InlineQueryResultGif({
     this.id,
@@ -60,7 +60,7 @@ class InlineQueryResultGif implements InlineQueryResult {
   });
 
   @JsonKey(ignore: true)
-  Duration get gif_duration_ => TimeHelper.toDuration(gif_duration);
+  Duration get gif_duration_ => TimeHelper.toDuration(gif_duration!);
   set gif_duration_(Duration duration) =>
       gif_duration = TimeHelper.toSeconds(duration);
 

@@ -22,10 +22,10 @@ part of '../model.dart';
 /// https://core.telegram.org/bots/api#passportfile
 @JsonSerializable()
 class PassportFile {
-  String file_id;
-  String file_unique_id;
-  int file_size;
-  int file_date;
+  String? file_id;
+  String? file_unique_id;
+  int? file_size;
+  int? file_date;
 
   PassportFile({
     this.file_id,
@@ -35,7 +35,7 @@ class PassportFile {
   });
 
   @JsonKey(ignore: true)
-  DateTime get file_date_ => TimeHelper.toDateTime(file_date);
+  DateTime get file_date_ => TimeHelper.toDateTime(file_date!);
   set file_date_(DateTime dateTime) =>
       file_date = TimeHelper.toUnixTime(dateTime);
 

@@ -28,10 +28,10 @@ part of '../model.dart';
 /// [getFile]: https://core.telegram.org/bots/api#getfile
 @JsonSerializable()
 class File {
-  String file_id;
-  String file_unique_id;
-  int file_size;
-  String file_path;
+  String? file_id;
+  String? file_unique_id;
+  int? file_size;
+  String? file_path;
   File({
     this.file_id,
     this.file_unique_id,
@@ -39,7 +39,7 @@ class File {
     this.file_path,
   });
 
-  String getDownloadLink(String token) => (file_path?.isEmpty ?? true)
+  String? getDownloadLink(String token) => (file_path?.isEmpty ?? true)
       ? null
       : 'https://api.telegram.org/file/bot$token/$file_path';
 

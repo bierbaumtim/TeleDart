@@ -30,7 +30,7 @@ class HttpClient {
   /// HTTP get method
   /// [url] request url with query string (required)
   static Future<dynamic> httpGet(String url) async =>
-      http.get(url).then((response) {
+      http.get(url as Uri).then((response) {
         Map<String, dynamic> responseBody = jsonDecode(response.body);
         if (responseBody['ok']) {
           return responseBody['result'];
@@ -44,10 +44,10 @@ class HttpClient {
   /// [url] - request url (required)
   /// [body] - parameters in map
   static Future<dynamic> httpPost(String url,
-      {Map<String, dynamic> body}) async {
+      {required Map<String, dynamic> body}) async {
     body.removeWhere(_nullFilter);
     return http
-        .post(url, body: body.map((k, v) => MapEntry(k, '$v')))
+        .post(url as Uri, body: body.map((k, v) => MapEntry(k, '$v')))
         .then((response) {
       Map<String, dynamic> responseBody = jsonDecode(response.body);
       if (responseBody['ok']) {
@@ -65,7 +65,7 @@ class HttpClient {
   /// [body] - parameters in map
   static Future<dynamic> httpMultipartPost(
       String url, List<http.MultipartFile> files,
-      {Map<String, dynamic> body}) async {
+      {required Map<String, dynamic> body}) async {
     body.removeWhere(_nullFilter);
     var request = http.MultipartRequest('POST', Uri.parse(url))
       ..headers.addAll({'Content-Type': 'multipart/form-data'})
@@ -87,10 +87,10 @@ class HttpClient {
 }
 
 class HttpClientException implements Exception {
-  int code;
-  String description;
+  int? code;
+  String? description;
   HttpClientException(this.code, this.description);
-  bool isHttpClientError() => code >= 400 && code < 500;
+  bool isHttpClientError() => code! >= 400 && code! < 500;
   @override
   String toString() => 'HttpClientException: $code $description';
 }

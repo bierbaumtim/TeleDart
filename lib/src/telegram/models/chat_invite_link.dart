@@ -21,12 +21,12 @@ part of '../model.dart';
 /// https://core.telegram.org/bots/api#chatinvitelink
 @JsonSerializable()
 class ChatInviteLink {
-  String invite_link;
-  User creator;
-  bool is_primary;
-  bool is_revoked;
-  int expire_date;
-  int member_limit;
+  String? invite_link;
+  User? creator;
+  bool? is_primary;
+  bool? is_revoked;
+  int? expire_date;
+  int? member_limit;
 
   ChatInviteLink({
     this.invite_link,
@@ -38,7 +38,7 @@ class ChatInviteLink {
   });
 
   @JsonKey(ignore: true)
-  DateTime get expire_date_ => TimeHelper.toDateTime(expire_date);
+  DateTime get expire_date_ => TimeHelper.toDateTime(expire_date!);
   set expire_date_(DateTime dateTime) =>
       expire_date = TimeHelper.toUnixTime(dateTime);
 

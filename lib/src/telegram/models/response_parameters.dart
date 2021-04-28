@@ -21,8 +21,8 @@ part of '../model.dart';
 /// https://core.telegram.org/bots/api#responseparameters
 @JsonSerializable()
 class ResponseParameters {
-  int migrate_to_chat_id;
-  int retry_after;
+  int? migrate_to_chat_id;
+  int? retry_after;
 
   ResponseParameters({
     this.migrate_to_chat_id,
@@ -30,7 +30,7 @@ class ResponseParameters {
   });
 
   @JsonKey(ignore: true)
-  Duration get retry_after_ => TimeHelper.toDuration(retry_after);
+  Duration get retry_after_ => TimeHelper.toDuration(retry_after!);
   set retry_after_(Duration duration) =>
       retry_after = TimeHelper.toSeconds(duration);
 

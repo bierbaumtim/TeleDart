@@ -20,21 +20,22 @@ import '../../telegram/model.dart';
 
 class Event {
   /// User object of bot.
-  User me;
+  late User me;
 
-  StreamController<Message> _messageStreamController;
-  StreamController<Message> _editedMessageStreamController;
-  StreamController<Message> _channelPostStreamController;
-  StreamController<Message> _editedChannelPostStreamController;
-  StreamController<InlineQuery> _inlineQueryStreamController;
-  StreamController<ChosenInlineResult> _chosenInlineResultStreamController;
-  StreamController<CallbackQuery> _callbackQueryStreamController;
-  StreamController<ShippingQuery> _shippingQueryStreamController;
-  StreamController<PreCheckoutQuery> _preCheckoutQueryStreamController;
-  StreamController<Poll> _pollStreamController;
-  StreamController<PollAnswer> _pollAnswerStreamController;
-  StreamController<ChatMemberUpdated> _myChatMemberStreamController;
-  StreamController<ChatMemberUpdated> _chatMemberStreamController;
+  late StreamController<Message?> _messageStreamController;
+  late StreamController<Message?> _editedMessageStreamController;
+  late StreamController<Message?> _channelPostStreamController;
+  late StreamController<Message?> _editedChannelPostStreamController;
+  late StreamController<InlineQuery?> _inlineQueryStreamController;
+  late StreamController<ChosenInlineResult?>
+      _chosenInlineResultStreamController;
+  late StreamController<CallbackQuery?> _callbackQueryStreamController;
+  late StreamController<ShippingQuery?> _shippingQueryStreamController;
+  late StreamController<PreCheckoutQuery?> _preCheckoutQueryStreamController;
+  late StreamController<Poll?> _pollStreamController;
+  late StreamController<PollAnswer?> _pollAnswerStreamController;
+  late StreamController<ChatMemberUpdated?> _myChatMemberStreamController;
+  late StreamController<ChatMemberUpdated?> _chatMemberStreamController;
 
   /// Constructor
   Event({bool sync = false}) {
@@ -55,30 +56,30 @@ class Event {
   }
 
   /// Listens to message events
-  Stream<Message> onMessage({String entityType, dynamic keyword}) =>
+  Stream<Message?> onMessage({String? entityType, dynamic keyword}) =>
       _messageStreamController.stream.where((message) {
         if (keyword == null) {
           if (entityType == null) {
             // no keyword and entityType
-            return (message.entities ?? message.caption_entities) == null;
+            return (message!.entities ?? message.caption_entities) == null;
           } else {
             // no keyword but entityType
-            return entityType == '*' || message.entityOf(entityType) != null;
+            return entityType == '*' || message!.entityOf(entityType) != null;
           }
         } else {
           if (!(keyword is String) && !(keyword is RegExp)) {
             throw TeleDartEventException(
                 'Attribute \'keyword\' accepts type of String or RegExp');
           } else if (entityType == null) {
-            return (message.entities ?? message.caption_entities) == null &&
+            return (message!.entities ?? message.caption_entities) == null &&
                 (message.text ?? message.caption ?? '').contains(keyword);
-          } else if (message.entityOf(entityType) == null) {
+          } else if (message!.entityOf(entityType) == null) {
             return false;
           } else if (entityType == 'text_mention') {
-            var userId = message.entityOf(entityType).user.id as String;
-            var userName = message.entityOf(entityType).user.first_name;
+            var userId = message.entityOf(entityType)!.user!.id as String?;
+            var userName = message.entityOf(entityType)!.user!.first_name;
             if (keyword is RegExp) {
-              return keyword.hasMatch(userName) || keyword.hasMatch(userId);
+              return keyword.hasMatch(userName!) || keyword.hasMatch(userId!);
             } else {
               return keyword == userName || keyword == userId;
             }
@@ -92,14 +93,14 @@ class Event {
               case 'mention': //'\@${keyword}'
               case 'cashtag': //'\$${keyword}'
               case 'hashtag': //'\#${keyword}'
-                entityText = message.getEntity(entityType).isNotEmpty
-                    ? message.getEntity(entityType).substring(1)
+                entityText = message.getEntity(entityType)!.isNotEmpty
+                    ? message.getEntity(entityType)!.substring(1)
                     : '';
                 break;
               case 'bot_command': //'\/${keyword}' or '\/${keyword}\@${me.username}'
-                entityText = message.getEntity(entityType).isNotEmpty
+                entityText = message.getEntity(entityType)!.isNotEmpty
                     ? message
-                        .getEntity(entityType)
+                        .getEntity(entityType)!
                         .substring(1)
                         .replaceAll('\@${me.username}', '')
                     : '';
@@ -116,7 +117,7 @@ class Event {
                 entityText = message.getEntity(entityType) ?? '';
                 break;
               case 'text_link':
-                entityText = message.entityOf(entityType).url ?? '';
+                entityText = message.entityOf(entityType)!.url ?? '';
                 break;
               default: // Dynamically listen to message types.
                 entityText = message.getEntity(entityType) ?? '';
@@ -134,9 +135,7 @@ class Event {
 
   /// Emits update events
   void emitUpdate(Update update) {
-    if (update == null) {
-      throw TeleDartEventException('Update cannot not be null');
-    } else if (update.message != null) {
+    if (update.message != null) {
       _messageStreamController.add(update.message);
     } else if (update.edited_message != null) {
       _editedMessageStreamController.add(update.edited_message);
@@ -168,46 +167,46 @@ class Event {
   }
 
   /// Listens to edited message events
-  Stream<Message> onEditedMessage() => _editedMessageStreamController.stream;
+  Stream<Message?> onEditedMessage() => _editedMessageStreamController.stream;
 
   /// Listens to channel post events
-  Stream<Message> onChannelPost() => _channelPostStreamController.stream;
+  Stream<Message?> onChannelPost() => _channelPostStreamController.stream;
 
   /// Listens to edited channel post events
-  Stream<Message> onEditedChannelPost() =>
+  Stream<Message?> onEditedChannelPost() =>
       _editedChannelPostStreamController.stream;
 
   /// Listens to inline query events
-  Stream<InlineQuery> onInlineQuery() => _inlineQueryStreamController.stream;
+  Stream<InlineQuery?> onInlineQuery() => _inlineQueryStreamController.stream;
 
   /// Listens to chosen inline query events
-  Stream<ChosenInlineResult> onChosenInlineResult() =>
+  Stream<ChosenInlineResult?> onChosenInlineResult() =>
       _chosenInlineResultStreamController.stream;
 
   /// Listens to callback query events
-  Stream<CallbackQuery> onCallbackQuery() =>
+  Stream<CallbackQuery?> onCallbackQuery() =>
       _callbackQueryStreamController.stream;
 
   /// Listens to shipping query events
-  Stream<ShippingQuery> onShippingQuery() =>
+  Stream<ShippingQuery?> onShippingQuery() =>
       _shippingQueryStreamController.stream;
 
   /// Listens to pre checkout query events
-  Stream<PreCheckoutQuery> onPreCheckoutQuery() =>
+  Stream<PreCheckoutQuery?> onPreCheckoutQuery() =>
       _preCheckoutQueryStreamController.stream;
 
   /// Listen to poll events
-  Stream<Poll> onPoll() => _pollStreamController.stream;
+  Stream<Poll?> onPoll() => _pollStreamController.stream;
 
   /// Listen to poll answer events
-  Stream<PollAnswer> onPollAnswer() => _pollAnswerStreamController.stream;
+  Stream<PollAnswer?> onPollAnswer() => _pollAnswerStreamController.stream;
 
   /// Listen to my chat member events
-  Stream<ChatMemberUpdated> onMyChatMember() =>
+  Stream<ChatMemberUpdated?> onMyChatMember() =>
       _myChatMemberStreamController.stream;
 
   /// Listen to chat member events
-  Stream<ChatMemberUpdated> onChatMember() =>
+  Stream<ChatMemberUpdated?> onChatMember() =>
       _chatMemberStreamController.stream;
 }
 
